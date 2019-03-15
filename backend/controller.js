@@ -1,52 +1,39 @@
-// Import model
-const model = require('./models.js');
-// Export for use by routes
-module.exports = {
-  allTasks: (req, res) => {
-    model.task.find()
-              .then((data) => {
-                res.json(data);
-              })
-              .catch(err => {
-                console.log("Error getting all tasks - ", err);
-              })
-  },
-  taskByID: (req, res) => {
-    model.task.findOne({_id: req.params.id})
-              .then((data) => {
-                res.json(data);
-              })
-              .catch(err => {
-                console.log("Error getting task by id - ", err);
-              })
-  },
-  createTask: (req, res) => {
-    model.task.create(req.body)
-              .then((data) => {
-                res.json(data);
-              })
-              .catch(err => {
-                console.log("Error creating a task - ", err);
-              })
-  },
-  updateTask: (req, res) => {
-    model.task.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
-              .then((data) => {
-                res.json(data);
-              })
-              .catch(err => {
-                console.log("Error updating task - ", err);
-              })
+const { Task } = require('./models.js');
 
+module.exports = {
+
+  allTasks: (req, res) => {
+    Task.find()
+      .then(data => console.log(data) || res.json(data))
+      .catch(err => console.log(err) || res.json(err));
   },
+
+  taskByID: (req, res) => {
+    const ID = req.params.id;
+    Task.findOne({_id:ID})
+      .then((data) => res.json(data))
+      .catch(err => res.json(err));
+  },
+
+  createTask: (req, res) => {
+    const DATA = req.body;
+    Task.create(DATA)
+      .then(data => res.json(data))
+      .catch(err => res.json(err));
+  },
+
+  updateTask: (req, res) => {
+    const DATA = req.body;
+    const ID = req.params.id;
+    Task.findOneAndUpdate({_id:ID}, DATA, {runValidators:true, new:true})
+      .then(data => res.json(data))
+      .catch(err => res.json(err));
+  },
+
   deleteTask: (req, res) => {
-    model.task.deleteOne({_id: req.params.id})
-              .then((data) => {
-                res.json(data);
-                console.log("Task deleted");
-              })
-              .catch(err => {
-                console.log("Error deleting task - ", err);
-              })
+    const ID = req.params.id;
+    Task.deleteOne({_id:ID})
+      .then(data => res.json(data))
+      .catch(err => res.json(err));
   }
 }

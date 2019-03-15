@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public/dist/public'));
 
 //Connect to mongo db
 mongoose.connect('mongodb://localhost/restfulTask1', {useNewUrlParser: true});
